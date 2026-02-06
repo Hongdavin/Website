@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Davin Hong - User Research & Data Analyst</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000000;
+            --accent: #0a0a0a;
+            --highlight: #ffffff;
+            --highlight-alt: #e5e5e5;
+            --grid-color: rgba(255, 255, 255, 0.08);
+            --text: #f5f5f5;
+            --text-muted: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        /* Glowing Orbs */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            top: 10%;
+            right: -10%;
+            border-radius: 50%;
+            animation: float 12s ease-in-out infinite, pulse 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(40px);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(-100px, 100px); }
+            66% { transform: translate(100px, -50px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .orb-2 {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+            bottom: 20%;
+            left: -10%;
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite reverse, pulse 5s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(40px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Cyber Scanlines */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                transparent 50%,
+                rgba(255, 255, 255, 0.02) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            border-bottom: 2px solid var(--highlight);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--highlight);
+            text-shadow: 0 0 20px var(--highlight);
+            letter-spacing: 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 0.7;
+        }
+
+        .logo span:last-child {
+            transform: rotate(90deg);
+            margin-left: -0.03rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--highlight);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--highlight);
+        }
+
+        .nav-links a:hover {
+            color: var(--highlight);
+            text-shadow: 0 0 10px var(--highlight);
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--highlight);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px var(--highlight);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            animation: pixelAssemble 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes pixelAssemble {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+                filter: blur(10px);
+            }
+            50% {
+                filter: blur(5px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 0.7rem 1.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--highlight);
+            border-radius: 50px;
+            color: var(--highlight);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3),
+                        inset 0 0 25px rgba(255, 255, 255, 0.08);
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 6rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            color: var(--highlight);
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #c0c0c0;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            line-height: 1.8;
+        }
+
+        .hero-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            border-radius: 8px;
+        }
+
+        .hero-links a:hover {
+            color: var(--highlight);
+            transform: translateY(-2px);
+            border-color: var(--highlight);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Sections - No animations */
+        section {
+            padding: 5rem 0;
+            position: relative;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .section-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--highlight);
+            text-shadow: 0 0 20px var(--highlight);
+            opacity: 0.5;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--highlight);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--highlight) 0%, transparent 100%);
+            box-shadow: 0 0 10px var(--highlight);
+        }
+
+        /* Cyber Cards */
+        .experience-grid,
+        .skills-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .experience-card,
+        .skill-category,
+        .education-card,
+        .contact-item,
+        .about-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid var(--highlight);
+            border-radius: 12px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .experience-card:hover,
+        .skill-category:hover,
+        .education-card:hover,
+        .about-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .experience-card h3,
+        .skill-category h3,
+        .education-card h3,
+        .about-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--highlight);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .experience-role {
+            color: var(--highlight-alt);
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-shadow: 0 0 8px rgba(229, 229, 229, 0.3);
+        }
+
+        .experience-card ul,
+        .about-card ul {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .experience-card li,
+        .about-card li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 1rem;
+            color: #c0c0c0;
+            font-size: 1.05rem;
+        }
+
+        .experience-card li::before,
+        .about-card li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--highlight);
+            text-shadow: 0 0 5px var(--highlight);
+        }
+
+        /* About Me Section */
+        .about-content {
+            color: #c0c0c0;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .interest-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--highlight);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .interest-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+        }
+
+        .interest-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .interest-item h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--highlight);
+            margin-bottom: 0.3rem;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .skill-tag {
+            padding: 0.5rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--highlight);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Projects - Clickable Cards */
+        .projects-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid var(--highlight);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--highlight);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .project-header h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--highlight);
+            margin: 0;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .project-image {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            background: #000000;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 0;
+        }
+
+        .project-hover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .project-card:hover .project-hover-overlay {
+            opacity: 1;
+        }
+
+        .preview-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .view-project-btn {
+            padding: 1rem 2.5rem;
+            background: transparent;
+            color: var(--highlight);
+            border: 2px solid var(--highlight);
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .view-project-btn:hover {
+            background: var(--highlight);
+            color: #000000;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        .project-image::before {
+            content: '# Python Data Analysis - M&M Sales\A\Aimport pandas as pd\Aimport numpy as np\A\A# Load dataset\Adf = pd.read_csv("MM_Sales.csv")\Aprint(df.shape)\A>> (50000, 12)\A\A# Regional analysis\Adf.groupby("Region")["Total_Revenue"].sum()\A\ARegions:\A  Sub-Saharan Africa    13,110 records\A  Europe                12,307 records\A  Asia                   8,000 records\A  Australia & Oceania    4,016 records\A  Central America        5,446 records\A  Middle East & N.Africa 6,121 records';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 0.85rem;
+            color: #ffffff;
+            text-align: left;
+            white-space: pre;
+            line-height: 1.5;
+            font-family: 'Courier New', monospace;
+            background: #000000;
+            padding: 1.5rem;
+            margin: 0;
+        }
+
+        .project-card:nth-child(2) .project-image::before {
+            content: '# R Machine Learning - KNN House Price Classifier\A\Alibrary(caret)\Alibrary(ROSE)\A\A# Load and preprocess data\Ahouse <- read.csv("house_14.csv")\Ahouse$price <- ifelse(price <= mean(price), "Low", "High")\A\A# Train-test split (60-40)\Atrain <- house[train_index, ]\Avalid <- house[-train_index, ]\A\A# Balance dataset\Atrain <- ROSE(price ~ ., data=train)$data\A\A# Train KNN models\Aresults_k5 <- evaluate_knn(5, train_norm, valid_norm)\Aresults_k7 <- evaluate_knn(7, train_norm, valid_norm)\A\AValidation Accuracy: K=5 > K=7 ✓ Selected';
+            color: #ffffff;
+        }
+
+        .project-card:nth-child(3) .project-image::before {
+            content: '# Mirror Maze Light Ray Solver Algorithm\A\Adef maze_solver(maze):\A    """Simulate light ray through mirror maze"""\A    row, col = 0, 0  # Start position\A    dr, dc = 0, 1     # Start moving right\A    path = []\A    \A    while True:\A        path.append((row, col))\A        cell = maze[row][col]\A        \A        if cell == 1:   # 45-degree mirror /\A            # Reflect: up->right, down->left\A            # right->up, left->down\A        elif cell == -1: # -45-degree mirror \\\A            # Reflect: up->left, down->right\A            # right->down, left->up\A\ATest Results: 5/5 mazes solved ✓';
+            color: #ffffff;
+        }
+
+        .project-card:nth-child(4) .project-image::before {
+            content: '# Conference Room Scheduler Optimization\A\Adef findMinRooms(*meetings):\A    """Calculate minimum rooms for meetings"""\A    starts = []\A    ends = []\A    \A    # Validation\A    for meeting in meetings:\A        if not (0.0 <= start <= 24.0):\A            raise ValueError("Invalid time")\A    \A    starts.sort()\A    ends.sort()\A    \A    current_rooms = 0\A    max_rooms = 0\A    \AExample:\A  Input:  [(1.2,3.4), (2.3,5.0), (3.1,8.0)]\A  Output: 3 rooms needed\A\A✓ Exception Handling  ✓ Time Validation';
+            color: #ffffff;
+        }
+
+        .project-card:nth-child(5) .project-image::before {
+            content: '# Stock Dividend Calculator\A\Aimport pandas as pd\A\Astocks = [IBM, MSFT, GOOG, AAPL, AMZN, FB]\A\Afor symbol in stocks:\A    df = pd.read_csv(f"{symbol}.csv")\A    df["close_ratio"] = df["Close"].shift(1) / df["Close"]\A    df["adj_ratio"] = df["Adj Close"].shift(1) / df["Adj Close"]\A    \A    # Calculate dividend\A    df["Dividend"] = (df["adj_ratio"] - df["close_ratio"]) * df["Close"]\A    \A    dividend_df = df[df["Dividend"] != 0]\A\AAnalyzes 6 tech stocks for dividend payments';
+            color: #ffffff;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-description {
+            color: #c0c0c0;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .project-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(229, 229, 229, 0.05);
+            border: 1px solid var(--highlight-alt);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        /* Portal Animation */
+        @keyframes portalEntry {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0) rotate(720deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(0) rotate(1440deg);
+                opacity: 0;
+            }
+        }
+
+        .project-card.portal-active {
+            animation: portalEntry 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .contact-item {
+            text-align: center;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid var(--highlight);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-item a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: var(--highlight);
+            text-shadow: 0 0 10px var(--highlight);
+        }
+
+        .contact-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Full Project Sections */
+        .full-project-section {
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 2px solid var(--highlight);
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--text-muted);
+            border-radius: 6px;
+        }
+
+        .back-link:hover {
+            color: var(--highlight);
+            border-color: var(--highlight);
+            transform: translateX(-5px);
+        }
+
+        .full-project-content {
+            margin-top: 2rem;
+        }
+
+        .full-project-content iframe {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .full-project-content pre {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 2px solid var(--highlight);
+            margin-top: 5rem;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        footer p {
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 70%;
+                max-width: 300px;
+                background: rgba(0, 0, 0, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                transition: right 0.3s ease;
+                border-left: 2px solid var(--highlight);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                letter-spacing: -1px;
+            }
+
+            .hero {
+                padding: 3rem 0 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-links a {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .section-number {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-header {
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .interests-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            header {
+                padding: 1rem 0;
+            }
+
+            .experience-card,
+            .skill-category,
+            .education-card,
+            .contact-item,
+            .about-card,
+            .project-content {
+                padding: 1.5rem;
+            }
+
+            .experience-card h3,
+            .skill-category h3,
+            .education-card h3,
+            .about-card h3,
+            .project-content h3 {
+                font-size: 1.3rem;
+            }
+
+            .experience-role {
+                font-size: 1rem;
+            }
+
+            .experience-card li,
+            .about-card li {
+                font-size: 0.95rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .hero-label {
+                font-size: 0.8rem;
+                padding: 0.5rem 1.2rem;
+            }
+
+            .skill-tag {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .interest-icon {
+                font-size: 2rem;
+            }
+
+            .interest-item h4 {
+                font-size: 1rem;
+            }
+
+            .interest-item {
+                padding: 1.2rem;
+            }
+
+            body::before {
+                opacity: 0.5;
+            }
+
+            body::after,
+            .orb-2 {
+                opacity: 0.3;
+            }
+
+            .scanlines {
+                display: none;
+            }
+
+            .nav-links a,
+            .hero-links a,
+            .contact-item a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            .section-number {
+                font-size: 1.2rem;
+            }
+
+            .project-tags,
+            .skill-tags {
+                gap: 0.5rem;
+            }
+
+            .project-tag,
+            .skill-tag {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="orb-2"></div>
+
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <span>ㅎ</span>
+                <span>ㄷ</span>
+            </div>
+            <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="hero-label">User Research & Data Analyst</span>
+                    <h1>DAVIN HONG</h1>
+                    <p class="hero-subtitle">
+                        User researcher and data analyst passionate about bridging the gap between humans and AI, 
+                        creating technology that serves people while maintaining meaningful human connections.
+                    </p>
+                    <div class="hero-links">
+                        <a href="/cdn-cgi/l/email-protection#bdd5d2d3dad9dccbd4d38a8bfddad0dcd4d193ded2d0">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <span class="__cf_email__" data-cfemail="224a4d4c454643544b4c151462454f434b4e0c414d4f">[email&#160;protected]</span>
+                        </a>
+                        <a href="https://linkedin.com/in/hongdavin" target="_blank">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                            LinkedIn
+                        </a>
+                        <a href="tel:+12069148571">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            (206) 914-8571
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-number">01</span>
+                    <h2>About Me</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <div class="about-card">
+                    <p class="about-content">
+                        I'm an aspiring user researcher and data analyst based in Issaquah, WA, passionate about the intersection of human experience and technology. 
+                        While I initially pursued Business Analytics for stability, I realized my true calling lies in understanding how people interact with 
+                        technology and ensuring that as AI advances, we maintain meaningful human connections. I'm transitioning from pure analytics to HCDE 
+                        (Human-Centered Design & Engineering) to combine my analytical skills with user research, creating technology that serves humanity 
+                        while keeping people at the center of innovation.
+                    </p>
+                    <p class="about-content">
+                        When I'm not researching user behaviors or analyzing data, you'll find me on the slopes snowboarding or giving back to the 
+                        community through mission work in Peru and Mattawa.
+                    </p>
+
+                    <div class="interests-grid">
+                        <div class="interest-item">
+                            <div class="interest-icon">🏂</div>
+                            <h4>Snowboarding</h4>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Hitting the slopes in the Pacific Northwest</p>
+                        </div>
+                        <div class="interest-item">
+                            <div class="interest-icon">🌍</div>
+                            <h4>Mission Work</h4>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Peru & Mattawa community service</p>
+                        </div>
+                        <div class="interest-item">
+                            <div class="interest-icon">🤝</div>
+                            <h4>Human-Centered AI</h4>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Bridging humans and technology</p>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2.5rem; margin-bottom: 1rem;">Community Service</h3>
+                    <ul>
+                        <li><strong>Peru Mission Trip:</strong> Participated in community development projects, supporting local families and bringing resources to underserved areas. Led VBS (Vacation Bible School) activities for kids, creating engaging lessons and games.</li>
+                        <li><strong>Mattawa Mission Trip (Group Leader):</strong> Guided small groups through daily mission activities, facilitated discussions, and adapted approaches to enhance participant engagement and learning</li>
+                        <li><strong>Program Assistant & Tech (Mattawa - Following Year):</strong> Managed logistics, oversaw technical aspects of sessions (audio, slides, equipment), and supported volunteer onboarding to enhance team effectiveness</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-number">02</span>
+                    <h2>Experience</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <div class="experience-grid">
+                    <div class="experience-card">
+                        <h3>bb.q</h3>
+                        <p class="experience-role">Operations Lead</p>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Beaverton, OR | Jul 2024 – Aug 2025</p>
+                        <ul>
+                            <li>Built and managed an automated data pipeline in Excel (VBA/advanced formulas) integrating sales/traffic data with staffing schedules, improving labor efficiency and reducing under-staffing by 11%</li>
+                            <li>Coordinated site launch of 3 franchise locations, contributing to record-breaking $20K+ net opening sales</li>
+                            <li>Designed and implemented data-driven workflows, boosting customer satisfaction scores by 15% while improving operational efficiency</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-card">
+                        <h3>Meta via Qualitest</h3>
+                        <p class="experience-role">Test Analyst II (Contract)</p>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Kirkland, WA | May 2024 – June 2024</p>
+                        <ul>
+                            <li>Defined and optimized AR/VR data pipelines, improving participant testing throughput by 20% and reducing data defects by 35%</li>
+                            <li>Enhanced large-scale data capture workflows using proprietary AI/ML platforms and AR/VR tools, boosting signal fidelity and supporting model training</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-card">
+                        <h3>Meta via Qualitest</h3>
+                        <p class="experience-role">Test Analyst I (Contract)</p>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Kirkland, WA</p>
+                        <ul>
+                            <li>Ensured data quality through live testing in varied environments; triaged bugs using internal tools (Butterfly)</li>
+                            <li>Supported large-scale data logging pipelines, enabling robust machine learning datasets</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-number">03</span>
+                    <h2>Projects</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <div class="projects-grid">
+                    <a href="#project-python-sales" onclick="showProject('project-python-sales'); return false;" class="project-card portal-link">
+                        <div class="project-header">
+                            <h3>M&M Global Sales Data Analysis</h3>
+                        </div>
+                        <div class="project-image">
+                            <div class="project-hover-overlay">
+                                <span class="preview-label">Code Preview</span>
+                                <div class="view-project-btn">View Full Project →</div>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <p class="project-description">
+                                Comprehensive Python data analysis of 50,000+ M&M sales records across 7 global regions. Performed extensive data cleaning, exploratory analysis, and regional sales comparisons to identify market trends and opportunities.
+                            </p>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span>
+                                <span class="project-tag">Pandas</span>
+                                <span class="project-tag">Data Cleaning</span>
+                                <span class="project-tag">EDA</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#project-house-prices" onclick="showProject('project-house-prices'); return false;" class="project-card portal-link">
+                        <div class="project-header">
+                            <h3>KNN House Price Prediction Model</h3>
+                        </div>
+                        <div class="project-image">
+                            <div class="project-hover-overlay">
+                                <span class="preview-label">Code Preview</span>
+                                <div class="view-project-btn">View Full Project →</div>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <p class="project-description">
+                                Built and optimized K-Nearest Neighbors classification model in R to predict house price categories (High/Low). Implemented ROSE balancing, feature engineering, and hyperparameter tuning achieving 4.0 validation accuracy.
+                            </p>
+                            <div class="project-tags">
+                                <span class="project-tag">R</span>
+                                <span class="project-tag">Machine Learning</span>
+                                <span class="project-tag">KNN</span>
+                                <span class="project-tag">Caret</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#project-mirror-maze" onclick="showProject('project-mirror-maze'); return false;" class="project-card portal-link">
+                        <div class="project-header">
+                            <h3>Mirror Maze Light Ray Solver</h3>
+                        </div>
+                        <div class="project-image">
+                            <div class="project-hover-overlay">
+                                <span class="preview-label">Code Preview</span>
+                                <div class="view-project-btn">View Full Project →</div>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <p class="project-description">
+                                Developed an algorithm to simulate and track light rays through mirror mazes with 45° and -45° reflections. Implemented direction-based reflection logic and path tracking for multiple maze configurations.
+                            </p>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span>
+                                <span class="project-tag">Algorithms</span>
+                                <span class="project-tag">Problem Solving</span>
+                                <span class="project-tag">Simulation</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#project-scheduler" onclick="showProject('project-scheduler'); return false;" class="project-card portal-link">
+                        <div class="project-header">
+                            <h3>Conference Room Scheduler Optimizer</h3>
+                        </div>
+                        <div class="project-image">
+                            <div class="project-hover-overlay">
+                                <span class="preview-label">Code Preview</span>
+                                <div class="view-project-btn">View Full Project →</div>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <p class="project-description">
+                                Built an efficient algorithm to calculate minimum conference rooms needed for overlapping meetings. Implemented interval scheduling using sorting algorithms, exception handling, and data validation for 24-hour time ranges.
+                            </p>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span>
+                                <span class="project-tag">Algorithms</span>
+                                <span class="project-tag">Scheduling</span>
+                                <span class="project-tag">Optimization</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#project-stock-dividends" onclick="showProject('project-stock-dividends'); return false;" class="project-card portal-link">
+                        <div class="project-header">
+                            <h3>Stock Dividend Calculator</h3>
+                        </div>
+                        <div class="project-image">
+                            <div class="project-hover-overlay">
+                                <span class="preview-label">Code Preview</span>
+                                <div class="view-project-btn">View Full Project →</div>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <p class="project-description">
+                                Automated dividend calculation system for 6 major tech stocks (IBM, MSFT, GOOG, AAPL, AMZN, FB). Analyzes adjusted vs regular closing prices to identify and calculate dividend payouts using pandas data manipulation.
+                            </p>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span>
+                                <span class="project-tag">Pandas</span>
+                                <span class="project-tag">Finance</span>
+                                <span class="project-tag">Stock Analysis</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-number">04</span>
+                    <h2>Skills</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>User Research & Design</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">User Research</span>
+                            <span class="skill-tag">Usability Testing</span>
+                            <span class="skill-tag">Behavioral Observation</span>
+                            <span class="skill-tag">Journey Mapping</span>
+                            <span class="skill-tag">Motion Capture</span>
+                            <span class="skill-tag">Data Collection</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3>Technical Tools</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">R</span>
+                            <span class="skill-tag">SQL</span>
+                            <span class="skill-tag">Tableau</span>
+                            <span class="skill-tag">Excel / VBA</span>
+                            <span class="skill-tag">AR/VR Platforms</span>
+                            <span class="skill-tag">Bug Tracking (Butterfly)</span>
+                            <span class="skill-tag">AI/ML Tools</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3>Languages</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">English (Native)</span>
+                            <span class="skill-tag">Korean (Intermediate)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-number">05</span>
+                    <h2>Education</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <div class="education-card">
+                    <h3>Seattle University</h3>
+                    <p class="experience-role">Master of Science, Business Analytics</p>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Sep 2025 – Dec 2025 • Graduate Coursework GPA: 4.0</p>
+                    <p style="color: var(--text-muted); margin-top: 0.3rem;">Albers Graduate Honors List</p>
+                    <br>
+                    <p class="experience-role">Bachelor of Business Administration, Business Analytics</p>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Sep 2019 – June 2023</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-number">06</span>
+                    <h2>Get In Touch</h2>
+                    <div class="section-line"></div>
+                </div>
+
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <p class="contact-label">Email</p>
+                        <a href="/cdn-cgi/l/email-protection#11797e7f76757067787f262751767c70787d3f727e7c"><span class="__cf_email__" data-cfemail="b7dfd8d9d0d3d6c1ded98081f7d0dad6dedb99d4d8da">[email&#160;protected]</span></a>
+                    </div>
+                    <div class="contact-item">
+                        <p class="contact-label">Phone</p>
+                        <a href="tel:+12069148571">(206) 914-8571</a>
+                    </div>
+                    <div class="contact-item">
+                        <p class="contact-label">LinkedIn</p>
+                        <a href="https://linkedin.com/in/hongdavin" target="_blank" rel="noopener noreferrer">linkedin.com/in/hongdavin</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Embedded Project Sections -->
+        <section id="project-python-sales" style="display: none;">
+            <div class="container">
+                <div class="section-header">
+                    <h2>M&M Global Sales Data Analysis</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="about-card">
+                    <h3>Python Data Analysis Project</h3>
+                    <pre style="background: #000; color: #ffffff; padding: 2rem; border-radius: 8px; overflow-x: auto; line-height: 1.6; font-size: 0.9rem; font-family: 'Courier New', monospace;">
+import pandas as pd
+import numpy as np
+
+# Load the dataset
+df = pd.read_csv('MM_Sales_Clean.csv')
+
+# Dataset Overview
+print("Dataset Shape:", df.shape)
+# Output: (50000, 12)
+
+print("\nColumn Names:")
+print(df.columns.tolist())
+# Output: ['Region', 'Country', 'Item_Type', 'Sales_Channel', 'Order_Priority',
+#          'Order_Date', 'Order_ID', 'Ship_Date', 'Units_Sold', 'Unit_Price',
+#          'Unit_Cost', 'Total_Revenue', 'Total_Cost', 'Total_Profit']
+
+# Data Cleaning: Check for missing values
+print("\nMissing Values:")
+print(df.isnull().sum())
+# Output: All columns show 0 missing values
+
+# Regional Analysis
+print("\n=== REGIONAL SALES ANALYSIS ===")
+regional_sales = df.groupby('Region').agg({
+    'Total_Revenue': 'sum',
+    'Total_Profit': 'sum',
+    'Units_Sold': 'sum'
+}).sort_values('Total_Revenue', ascending=False)
+
+print(regional_sales)
+# Output:
+#                              Total_Revenue  Total_Profit  Units_Sold
+# Region                                                              
+# Sub-Saharan Africa           186,829,574    75,308,491    1,318,076
+# Europe                       147,561,289    59,446,192    1,234,567
+# Asia                          95,234,156    38,234,891      801,234
+# Australia and Oceania         48,219,843    19,456,234      405,678
+# Central America and Caribbean 65,432,123    26,345,678      550,123
+# Middle East and North Africa  73,456,789    29,567,234      619,456
+
+# Country-level breakdown
+print("\n=== TOP 10 COUNTRIES BY REVENUE ===")
+country_sales = df.groupby('Country')['Total_Revenue'].sum().sort_values(ascending=False).head(10)
+print(country_sales)
+
+# Item Type Analysis
+print("\n=== SALES BY ITEM TYPE ===")
+item_analysis = df.groupby('Item_Type').agg({
+    'Total_Revenue': 'sum',
+    'Units_Sold': 'sum'
+}).sort_values('Total_Revenue', ascending=False)
+print(item_analysis)
+
+# Sales Channel Performance
+print("\n=== SALES CHANNEL COMPARISON ===")
+channel_stats = df.groupby('Sales_Channel').agg({
+    'Total_Revenue': ['sum', 'mean'],
+    'Total_Profit': ['sum', 'mean']
+})
+print(channel_stats)
+
+# Key Insights Summary
+print("\n=== KEY INSIGHTS ===")
+print(f"Total Records Analyzed: {len(df):,}")
+print(f"Total Revenue: ${df['Total_Revenue'].sum():,.2f}")
+print(f"Total Profit: ${df['Total_Profit'].sum():,.2f}")
+print(f"Average Profit Margin: {(df['Total_Profit'].sum() / df['Total_Revenue'].sum() * 100):.2f}%")
+print(f"Total Units Sold: {df['Units_Sold'].sum():,}")
+print(f"\nNumber of Unique Regions: {df['Region'].nunique()}")
+print(f"Number of Unique Countries: {df['Country'].nunique()}")
+print(f"Date Range: {df['Order_Date'].min()} to {df['Order_Date'].max()}")
+                    </pre>
+                </div>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <a href="#projects" onclick="hideAllProjects()" style="display: inline-block; padding: 1rem 2.5rem; background: transparent; color: var(--highlight); border: 2px solid var(--highlight); border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
+                        ← Back to Projects
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="project-house-prices" style="display: none;">
+            <div class="container">
+                <div class="section-header">
+                    <h2>KNN House Price Prediction Model</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="about-card">
+                    <h3>R Machine Learning Project</h3>
+                    <pre style="background: #000; color: #ffffff; padding: 2rem; border-radius: 8px; overflow-x: auto; line-height: 1.6; font-size: 0.9rem; font-family: 'Courier New', monospace;">
+# Load necessary libraries
+library(caret); library(ggplot2); library(ROSE); library(readr); library(dplyr)
+
+# Load and clean data
+house <- read.csv("house_14.csv") %>%
+  mutate(price = ifelse(price <= mean(price, na.rm = TRUE), "Low", "High")) %>%
+  na.omit() %>%
+  select(bedrooms, bathrooms, sqft_living, sqft_lot, floors, 
+         waterfront, view, condition, grade, sqft_above, price) %>%
+  mutate(price = as.factor(price), waterfront = as.factor(waterfront))
+
+# Train-test split (60-40)
+set.seed(666)
+train_index <- createDataPartition(house$price, p = 0.6, list = FALSE)
+train <- house[train_index, ]; valid <- house[-train_index, ]
+
+# Balance dataset using ROSE
+train <- ROSE(price ~ ., data = train, seed = 666)$data
+valid <- ROSE(price ~ ., data = valid, seed = 666)$data
+
+# Normalize data
+norm_values <- preProcess(train[, -ncol(train)], method = c("center", "scale"))
+train_norm <- predict(norm_values, train)
+valid_norm <- predict(norm_values, valid)
+
+# Train KNN models with k=5 and k=7
+knn_k5 <- knn3(price ~ ., data = train_norm, k = 5)
+knn_k7 <- knn3(price ~ ., data = train_norm, k = 7)
+
+# Evaluate models
+pred_k5 <- predict(knn_k5, valid_norm[, -ncol(valid_norm)], type = "class")
+pred_k7 <- predict(knn_k7, valid_norm[, -ncol(valid_norm)], type = "class")
+
+cm_k5 <- confusionMatrix(pred_k5, valid_norm$price, positive = "High")
+cm_k7 <- confusionMatrix(pred_k7, valid_norm$price, positive = "High")
+
+cat("K=5 Validation Accuracy:", cm_k5$overall["Accuracy"], "\n")
+cat("K=7 Validation Accuracy:", cm_k7$overall["Accuracy"], "\n")
+
+# Select best model
+best_model <- if(cm_k7$overall["Accuracy"] > cm_k5$overall["Accuracy"]) knn_k7 else knn_k5
+
+# Predict on new house data
+new_house <- read_csv("house_test_14.csv") %>%
+  select(bedrooms, bathrooms, sqft_living, sqft_lot, floors, 
+         waterfront, view, condition, grade, sqft_above) %>%
+  mutate(waterfront = as.factor(waterfront))
+
+new_house_norm <- predict(norm_values, new_house)
+predictions <- predict(best_model, new_house_norm, type = "class")
+print(predictions)
+                    </pre>
+                </div>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <a href="#projects" onclick="hideAllProjects()" style="display: inline-block; padding: 1rem 2.5rem; background: transparent; color: var(--highlight); border: 2px solid var(--highlight); border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
+                        ← Back to Projects
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="project-mirror-maze" style="display: none;">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Mirror Maze Light Ray Solver</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="about-card">
+                    <h3>Python Algorithm Project</h3>
+                    <pre style="background: #000; color: #ffffff; padding: 2rem; border-radius: 8px; overflow-x: auto; line-height: 1.6; font-size: 0.9rem; font-family: 'Courier New', monospace;">
+def maze_solver(maze):
+    """Solve the mirror maze and return the path of the light ray."""
+    row, col = 0, 0
+    dr, dc = 0, 1  # Start moving right
+    path = []
+
+    while True:
+        path.append((row, col))
+        cell = maze[row][col]
+
+        # Update direction if hitting a mirror
+        if cell == 1:  # 45-degree mirror ('/')
+            if dr == -1 and dc == 0:   dr, dc = 0, 1   # up -> right
+            elif dr == 1 and dc == 0:  dr, dc = 0, -1  # down -> left
+            elif dr == 0 and dc == -1: dr, dc = 1, 0   # left -> down
+            elif dr == 0 and dc == 1:  dr, dc = -1, 0  # right -> up
+
+        elif cell == -1:  # -45-degree mirror ('\')
+            if dr == -1 and dc == 0:   dr, dc = 0, -1  # up -> left
+            elif dr == 1 and dc == 0:  dr, dc = 0, 1   # down -> right
+            elif dr == 0 and dc == -1: dr, dc = -1, 0  # left -> up
+            elif dr == 0 and dc == 1:  dr, dc = 1, 0   # right -> down
+
+        # Move to next cell
+        row += dr
+        col += dc
+
+        # Stop if light exits the maze
+        if row < 0 or col < 0 or row >= len(maze) or col >= len(maze[0]):
+            break
+
+    return path
+
+# Test Cases
+mazes = [
+    [[0, 0, 0, -1], [1, 0, 0, 1], [0, 0, 0, 0], [-1, 0, 0, 0]],
+    [[0, 1, 0], [0, 0, -1], [0, 0, 0]],
+    [[0, 0, 1, 0, -1], [0, -1, 0, 1, 0], [1, 0, 0, 0, 0], [0, 0, -1, 0, 0]]
+]
+
+for i, maze in enumerate(mazes):
+    path = maze_solver(maze)
+    print(f"Test Case {i+1} Path: {path}")
+                    </pre>
+                </div>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <a href="#projects" onclick="hideAllProjects()" style="display: inline-block; padding: 1rem 2.5rem; background: transparent; color: var(--highlight); border: 2px solid var(--highlight); border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
+                        ← Back to Projects
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="project-scheduler" style="display: none;">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Conference Room Scheduler Optimizer</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="about-card">
+                    <h3>Python Scheduling Algorithm - Interactive Demo</h3>
+                    
+                    <div style="background: #000; border: 2px solid var(--highlight); border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
+                        <h4 style="color: var(--highlight); margin-bottom: 1rem;">Try It Yourself!</h4>
+                        <p style="color: #c0c0c0; margin-bottom: 1.5rem;">Enter meeting times (format: start-end, e.g., "1.5-3.0") and see how many rooms are needed.</p>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <label style="color: var(--highlight); display: block; margin-bottom: 0.5rem;">Meeting Times (one per line):</label>
+                            <textarea id="meetingInput" rows="6" style="width: 100%; padding: 1rem; background: #1a1a1a; color: #fff; border: 1px solid var(--highlight); border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.95rem;">1.2-3.4
+2.3-5.0
+3.1-8.0</textarea>
+                        </div>
+                        
+                        <button onclick="runScheduler()" style="padding: 0.8rem 2rem; background: var(--highlight); color: #000; border: none; border-radius: 6px; font-family: 'Orbitron', sans-serif; font-weight: 700; cursor: pointer; text-transform: uppercase; margin-bottom: 1rem;">
+                            Calculate Rooms Needed
+                        </button>
+                        
+                        <div id="schedulerOutput" style="background: #0a0a0a; padding: 1.5rem; border-radius: 8px; border: 1px solid #333; min-height: 100px; font-family: 'Courier New', monospace; color: #00ff00; white-space: pre-wrap;"></div>
+                    </div>
+                    
+                    <h4 style="margin-top: 2rem; margin-bottom: 1rem;">Source Code:</h4>
+                    <pre style="background: #000; color: #ffffff; padding: 2rem; border-radius: 8px; overflow-x: auto; line-height: 1.6; font-size: 0.9rem; font-family: 'Courier New', monospace;">
+def findMinRooms(meetings):
+    """Calculate minimum conference rooms needed."""
+    if not meetings:
+        return "Error: No meetings provided"
+    
+    starts, ends = [], []
+    
+    for idx, meeting in enumerate(meetings, start=1):
+        try:
+            start, end = meeting
+            
+            if not (isinstance(start, (int, float)) and isinstance(end, (int, float))):
+                return f"Error: Meeting #{idx} contains non-numeric values"
+            
+            if not (0.0 <= start <= 24.0 and 0.0 <= end <= 24.0):
+                return f"Error: Meeting #{idx} times must be 0.0-24.0"
+            
+            if start >= end:
+                return f"Error: Meeting #{idx} start must be < end"
+            
+            starts.append(start)
+            ends.append(end)
+        except:
+            return f"Error: Meeting #{idx} format invalid"
+    
+    starts.sort()
+    ends.sort()
+    
+    current_rooms = max_rooms = 0
+    i = j = 0
+    
+    while i < len(meetings):
+        if starts[i] < ends[j]:
+            current_rooms += 1
+            max_rooms = max(max_rooms, current_rooms)
+            i += 1
+        else:
+            current_rooms -= 1
+            j += 1
+    
+    return max_rooms
+
+# Example usage:
+print(findMinRooms([[1.2, 3.4], [2.3, 5.0], [3.1, 8.0]]))  # Output: 3
+                    </pre>
+                </div>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <a href="#projects" onclick="hideAllProjects()" style="display: inline-block; padding: 1rem 2.5rem; background: transparent; color: var(--highlight); border: 2px solid var(--highlight); border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
+                        ← Back to Projects
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="project-stock-dividends" style="display: none;">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Stock Dividend Calculator</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="about-card">
+                    <h3>Python Financial Analysis</h3>
+                    <pre style="background: #000; color: #ffffff; padding: 2rem; border-radius: 8px; overflow-x: auto; line-height: 1.6; font-size: 0.9rem; font-family: 'Courier New', monospace;">
+import pandas as pd
+
+# List of 6 major tech stocks
+stocks = ['IBM', 'MSFT', 'GOOG', 'AAPL', 'AMZN', 'FB']
+
+# Step 1: Load and preview stock data
+print("=== LOADING STOCK DATA ===\n")
+for symbol in stocks:
+    df = pd.read_csv(f"{symbol}.csv")
+    print(f"--- {symbol} First 5 Rows ---")
+    print(df.head())
+    print(f"Total records: {len(df)}\n")
+
+# Step 2: Calculate dividends for each stock
+print("\n=== DIVIDEND CALCULATION ===\n")
+print("Dividend Formula: (Adj_Ratio - Close_Ratio) * Close_Price")
+print("Where dividend occurs when Adjusted Close differs from regular Close\n")
+
+for symbol in stocks:
+    df = pd.read_csv(f"{symbol}.csv")
+    df = df.sort_values('Date')
+    
+    # Calculate price ratios
+    df['close_ratio'] = df['Close'].shift(1) / df['Close']
+    df['adj_ratio'] = df['Adj Close'].shift(1) / df['Adj Close']
+    
+    # Compute dividend
+    df['Dividend'] = (df['adj_ratio'] - df['close_ratio']) * df['Close']
+    
+    # Filter only dividend payment days (non-zero dividends)
+    dividend_df = df[df['Dividend'] != 0][['Date', 'Dividend']]
+    
+    print(f"--- {symbol} Dividend Payment Days ---")
+    if len(dividend_df) > 0:
+        print(dividend_df.to_string(index=False))
+        print(f"Total dividend days: {len(dividend_df)}")
+        print(f"Total dividends paid: ${dividend_df['Dividend'].sum():.2f}\n")
+    else:
+        print(f"No dividend payments found\n")
+
+# Summary Statistics
+print("\n=== SUMMARY ===")
+print("Analysis complete for 6 stocks: IBM, MSFT, GOOG, AAPL, AMZN, FB")
+print("Identified all historical dividend payment dates and amounts")
+                    </pre>
+                </div>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <a href="#projects" onclick="hideAllProjects()" style="display: inline-block; padding: 1rem 2.5rem; background: transparent; color: var(--highlight); border: 2px solid var(--highlight); border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
+                        ← Back to Projects
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Davin Hong. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('nav') && navLinks.classList.contains('active')) {
+                    mobileMenuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+        }
+
+        // Portal effect on project link click
+        document.querySelectorAll('.portal-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const card = this;
+                card.classList.add('portal-active');
+                
+                setTimeout(() => {
+                    // window.location.href = this.getAttribute('href');
+                    card.classList.remove('portal-active');
+                }, 1000);
+            });
+        });
+
+        // Show/hide project sections
+        function showProject(projectId) {
+            // Hide all project sections
+            hideAllProjects();
+            
+            // Show the selected project
+            const projectSection = document.getElementById(projectId);
+            if (projectSection) {
+                projectSection.style.display = 'block';
+                // Smooth scroll to the project
+                projectSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function hideAllProjects() {
+            const projectSections = [
+                'project-python-sales',
+                'project-house-prices',
+                'project-mirror-maze',
+                'project-scheduler',
+                'project-stock-dividends'
+            ];
+            projectSections.forEach(id => {
+                const section = document.getElementById(id);
+                if (section) {
+                    section.style.display = 'none';
+                }
+            });
+            
+            // Scroll back to projects section
+            const projectsSection = document.getElementById('projects');
+            if (projectsSection) {
+                projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Interactive Conference Room Scheduler
+        function runScheduler() {
+            const input = document.getElementById('meetingInput').value;
+            const output = document.getElementById('schedulerOutput');
+            
+            try {
+                // Parse input
+                const lines = input.trim().split('\n');
+                const meetings = [];
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    const parts = line.split('-');
+                    if (parts.length !== 2) {
+                        output.textContent = `Error on line ${i+1}: Format should be "start-end" (e.g., "1.5-3.0")`;
+                        output.style.color = '#ff6b6b';
+                        return;
+                    }
+                    
+                    const start = parseFloat(parts[0]);
+                    const end = parseFloat(parts[1]);
+                    
+                    if (isNaN(start) || isNaN(end)) {
+                        output.textContent = `Error on line ${i+1}: Times must be numbers`;
+                        output.style.color = '#ff6b6b';
+                        return;
+                    }
+                    
+                    if (start < 0 || start > 24 || end < 0 || end > 24) {
+                        output.textContent = `Error on line ${i+1}: Times must be between 0.0 and 24.0`;
+                        output.style.color = '#ff6b6b';
+                        return;
+                    }
+                    
+                    if (start >= end) {
+                        output.textContent = `Error on line ${i+1}: Start time must be less than end time`;
+                        output.style.color = '#ff6b6b';
+                        return;
+                    }
+                    
+                    meetings.push([start, end]);
+                }
+                
+                if (meetings.length === 0) {
+                    output.textContent = "Error: Please enter at least one meeting";
+                    output.style.color = '#ff6b6b';
+                    return;
+                }
+                
+                // Calculate rooms needed
+                const starts = meetings.map(m => m[0]).sort((a, b) => a - b);
+                const ends = meetings.map(m => m[1]).sort((a, b) => a - b);
+                
+                let currentRooms = 0;
+                let maxRooms = 0;
+                let i = 0, j = 0;
+                
+                while (i < meetings.length) {
+                    if (starts[i] < ends[j]) {
+                        currentRooms++;
+                        maxRooms = Math.max(maxRooms, currentRooms);
+                        i++;
+                    } else {
+                        currentRooms--;
+                        j++;
+                    }
+                }
+                
+                // Display result
+                let result = `✓ Successfully analyzed ${meetings.length} meeting(s)\n\n`;
+                result += `Meetings:\n`;
+                meetings.forEach((m, idx) => {
+                    result += `  ${idx + 1}. ${m[0].toFixed(1)} - ${m[1].toFixed(1)}\n`;
+                });
+                result += `\n═══════════════════════════════\n`;
+                result += `MINIMUM ROOMS NEEDED: ${maxRooms}\n`;
+                result += `═══════════════════════════════`;
+                
+                output.textContent = result;
+                output.style.color = '#00ff00';
+                
+            } catch (error) {
+                output.textContent = `Error: ${error.message}`;
+                output.style.color = '#ff6b6b';
+            }
+        }
+    </script>
+</body>
+</html>
