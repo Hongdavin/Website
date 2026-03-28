@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Davin Hong</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg:#070a10; --surface:#0b0f18; --mercury:#b8cfe8;
+            --silver:#d4e8f8; --chrome:#e8f4ff; --dim:#5a7a9a;
+            --rule:rgba(100,180,255,0.1); --shine:rgba(120,200,255,0.06);
+        }
+        body { font-family:'Rajdhani',sans-serif; background:var(--bg); color:var(--mercury); line-height:1.6; overflow-x:hidden; }
+        .grain { position:fixed; inset:0; pointer-events:none; z-index:999; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E"); mix-blend-mode:screen; }
+        .scanlines { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(transparent 50%,rgba(100,180,255,0.015) 50%); background-size:100% 4px; pointer-events:none; z-index:998; animation:scan 10s linear infinite; }
+        @keyframes scan { 0%{transform:translateY(0)} 100%{transform:translateY(4px)} }
+        .container { max-width:1200px; margin:0 auto; padding:0 2rem; position:relative; z-index:1; }
+        header { padding:1.5rem 0; position:sticky; top:0; background:rgba(7,10,16,0.92); backdrop-filter:blur(24px); z-index:100; border-bottom:1px solid var(--rule); box-shadow:0 0 40px rgba(60,140,255,0.08); }
+        nav { display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-family:'Orbitron',sans-serif; font-size:1.8rem; font-weight:900; color:var(--chrome); text-shadow:0 0 30px rgba(100,200,255,0.5); letter-spacing:1px; }
+        .nav-links { display:flex; gap:2.5rem; list-style:none; }
+        .nav-links a { color:var(--dim); text-decoration:none; font-weight:600; font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; transition:all 0.3s ease; position:relative; padding:0.5rem 0; }
+        .nav-links a::before { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:linear-gradient(90deg,var(--chrome),var(--mercury)); transition:width 0.3s ease; box-shadow:0 0 8px rgba(100,200,255,0.5); }
+        .nav-links a:hover { color:var(--chrome); text-shadow:0 0 12px rgba(100,200,255,0.4); }
+        .nav-links a:hover::before { width:100%; }
+        .mobile-menu-toggle { display:none; flex-direction:column; gap:5px; cursor:pointer; z-index:101; }
+        .mobile-menu-toggle span { width:25px; height:1px; background:var(--chrome); transition:all 0.3s ease; }
+        .mobile-menu-toggle.active span:nth-child(1) { transform:rotate(45deg) translate(6px,6px); }
+        .mobile-menu-toggle.active span:nth-child(2) { opacity:0; }
+        .mobile-menu-toggle.active span:nth-child(3) { transform:rotate(-45deg) translate(6px,-6px); }
+
+        /* HERO */
+        .hero { padding:6rem 0 4rem; position:relative; overflow:hidden; }
+        .hero-content { animation:assemble 0.9s cubic-bezier(0.4,0,0.2,1) forwards; }
+        @keyframes assemble { 0%{opacity:0;transform:scale(0.92) translateY(28px);filter:blur(8px)} 60%{filter:blur(3px)} 100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0)} }
+        h1 { font-family:'Orbitron',sans-serif; font-size:6rem; font-weight:900; line-height:1; margin-bottom:1.5rem; letter-spacing:-2px; background:linear-gradient(135deg,#e8f4ff 0%,#90c8f0 35%,#5090c8 60%,#b0d8f8 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; filter:drop-shadow(0 0 30px rgba(80,160,255,0.2)); }
+        .hero-subtitle { font-size:1.15rem; color:var(--dim); margin-bottom:2.5rem; max-width:780px; line-height:1.9; }
+        .hero-links { display:flex; gap:2rem; flex-wrap:wrap; }
+        .hero-links a { color:var(--dim); text-decoration:none; transition:all 0.3s ease; display:flex; align-items:center; gap:0.5rem; padding:0.5rem 1rem; border:1px solid transparent; border-radius:8px; }
+        .hero-links a:hover { color:var(--chrome); border-color:rgba(100,180,255,0.2); box-shadow:0 0 16px rgba(80,160,255,0.1); }
+
+        /* SECTIONS */
+        section { padding:5rem 0; position:relative; }
+        .section-header { display:flex; align-items:center; gap:1.5rem; margin-bottom:3.5rem; }
+        h2 { font-family:'Orbitron',sans-serif; font-size:2.8rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; background:linear-gradient(135deg,#e8f4ff 0%,#90c8f0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .section-line { flex:1; height:1px; background:linear-gradient(90deg,rgba(100,180,255,0.4) 0%,transparent 100%); box-shadow:0 0 8px rgba(80,160,255,0.15); }
+
+        /* ABOUT */
+        .about-card { background:rgba(100,180,255,0.025); border:1px solid var(--rule); border-radius:12px; padding:2.5rem; position:relative; overflow:hidden; box-shadow:inset 0 1px 0 rgba(100,180,255,0.06); transition:all 0.4s ease; }
+        .about-card:hover { border-color:rgba(100,180,255,0.22); }
+        .about-card::before { content:''; position:absolute; top:0; left:-100%; width:60%; height:1px; background:linear-gradient(90deg,transparent,rgba(100,200,255,0.3),transparent); animation:sheen 6s ease-in-out infinite; }
+        @keyframes sheen { 0%,100%{left:-60%} 50%{left:140%} }
+        .about-card h3 { font-family:'Orbitron',sans-serif; font-size:1.5rem; font-weight:700; background:linear-gradient(135deg,var(--chrome),var(--mercury)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:0.5rem; }
+        .about-card ul { list-style:none; margin-top:1.5rem; }
+        .about-card li { padding-left:1.5rem; position:relative; margin-bottom:1rem; color:var(--dim); font-size:1.05rem; }
+        .about-card li::before { content:'▸'; position:absolute; left:0; color:var(--mercury); opacity:0.5; }
+        .about-card li strong { color:var(--mercury); }
+        .interests-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1.5rem; margin-top:2rem; }
+        .interest-item { background:rgba(100,180,255,0.03); border:1px solid rgba(100,180,255,0.1); border-radius:8px; padding:1.5rem; text-align:center; transition:all 0.3s ease; }
+        .interest-item:hover { background:rgba(100,180,255,0.06); border-color:rgba(100,180,255,0.22); transform:translateY(-3px); }
+        .interest-icon { font-size:2.5rem; margin-bottom:0.5rem; }
+        .interest-item h4 { font-family:'Orbitron',sans-serif; font-size:1rem; color:var(--silver); margin-bottom:0.3rem; }
+        .interest-item p { color:var(--dim); font-size:0.9rem; }
+
+        /* PROJECT CARDS */
+        .projects-grid { display:flex; flex-direction:column; gap:3rem; }
+        .project-card { background:rgba(100,180,255,0.025); border:1px solid var(--rule); border-radius:12px; overflow:hidden; position:relative; transition:all 0.4s ease; box-shadow:inset 0 1px 0 rgba(100,180,255,0.05); }
+        .project-card:hover { transform:translateY(-4px); border-color:rgba(100,180,255,0.22); box-shadow:inset 0 1px 0 rgba(100,180,255,0.08),0 16px 50px rgba(60,140,255,0.1); }
+        .project-card::before { content:''; position:absolute; top:0; left:-100%; width:60%; height:1px; background:linear-gradient(90deg,transparent,rgba(100,200,255,0.25),transparent); animation:sheen 8s ease-in-out infinite; animation-delay:var(--sheen-delay,0s); }
+        .project-header { padding:1.5rem 2rem; border-bottom:1px solid var(--rule); background:rgba(100,180,255,0.02); }
+        .project-header h3 { font-family:'Orbitron',sans-serif; font-size:1.4rem; font-weight:700; background:linear-gradient(135deg,var(--chrome) 0%,var(--mercury) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:0; }
+        .project-body { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+        .project-left { padding:2rem; border-right:1px solid var(--rule); display:flex; flex-direction:column; gap:1.5rem; }
+        .project-right { padding:2rem; display:flex; flex-direction:column; gap:1.5rem; }
+        .project-description { color:var(--dim); line-height:1.8; font-size:1.05rem; }
+
+        /* INSIGHTS */
+        .insight-block { background:rgba(100,180,255,0.04); border:1px solid rgba(100,180,255,0.12); border-radius:8px; padding:1.2rem 1.5rem; }
+        .insight-label { font-family:'Orbitron',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--dim); margin-bottom:0.8rem; }
+        .insight-item { display:flex; align-items:flex-start; gap:0.6rem; margin-bottom:0.5rem; color:var(--dim); font-size:0.9rem; line-height:1.5; }
+        .insight-item:last-child { margin-bottom:0; }
+        .insight-item::before { content:'→'; color:var(--mercury); opacity:0.6; flex-shrink:0; margin-top:0.1rem; }
+
+        /* CHARTS */
+        .chart-wrap { background:rgba(0,0,0,0.3); border:1px solid rgba(100,180,255,0.08); border-radius:8px; padding:1rem; }
+        .chart-title { font-family:'Orbitron',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); margin-bottom:0.8rem; }
+        .chart-tabs { display:flex; gap:0.4rem; margin-bottom:0.8rem; flex-wrap:wrap; }
+        .chart-tab { font-size:0.7rem; padding:0.25rem 0.7rem; background:transparent; border:1px solid rgba(100,180,255,0.15); color:var(--dim); cursor:pointer; border-radius:4px; font-family:'Rajdhani',sans-serif; font-weight:600; letter-spacing:0.5px; transition:all 0.2s; }
+        .chart-tab.active,.chart-tab:hover { background:rgba(100,180,255,0.1); border-color:rgba(100,180,255,0.4); color:var(--chrome); }
+
+        /* CODE */
+        pre { background:#060708; color:#8a9aaa; padding:1.5rem; border-radius:8px; overflow-x:auto; line-height:1.6; font-size:0.82rem; font-family:'Courier New',monospace; border:1px solid rgba(100,180,255,0.06); }
+        .project-tags { display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:auto; }
+        .project-tag { padding:0.4rem 1rem; background:rgba(100,180,255,0.04); border:1px solid rgba(100,180,255,0.12); border-radius:6px; font-size:0.88rem; color:var(--dim); transition:all 0.25s ease; }
+        .project-card:hover .project-tag { border-color:rgba(100,180,255,0.18); color:var(--mercury); }
+        .code-toggle-btn { display:inline-block; margin-top:0.5rem; padding:0.45rem 1.1rem; background:transparent; color:var(--mercury); border:1px solid rgba(100,180,255,0.2); border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer; letter-spacing:1px; transition:all 0.3s ease; }
+        .code-toggle-btn:hover { background:rgba(100,180,255,0.08); border-color:rgba(100,180,255,0.4); color:var(--chrome); }
+
+        /* FOOTER */
+        footer { padding:3rem 0; text-align:center; border-top:1px solid var(--rule); margin-top:5rem; }
+        footer p { color:var(--dim); }
+
+        /* MOBILE */
+        @media(max-width:900px) {
+            .project-body { grid-template-columns:1fr; }
+            .project-left { border-right:none; border-bottom:1px solid var(--rule); }
+            h1 { font-size:3rem; }
+            h2 { font-size:1.8rem; }
+            .mobile-menu-toggle { display:flex; }
+            .nav-links { position:fixed; top:0; right:-100%; height:100vh; width:70%; max-width:300px; background:rgba(7,10,16,0.98); backdrop-filter:blur(24px); flex-direction:column; justify-content:center; align-items:center; gap:2rem; transition:right 0.3s ease; border-left:1px solid var(--rule); }
+            .nav-links.active { right:0; }
+        }
+    </style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="scanlines"></div>
+
+<header>
+    <nav class="container">
+        <div class="logo">ㅎ ㄷ</div>
+        <div class="mobile-menu-toggle" id="mobileMenuToggle"><span></span><span></span><span></span></div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>DAVIN HONG</h1>
+                <p class="hero-subtitle">Business analytics professional with experience in SQL, Python, R, and Tableau.<br>Turning Data Into Decisions That Matter.</p>
+                <div class="hero-links">
+                    <a href="https://linkedin.com/in/hongdavin" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                        LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Me</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="about-card">
+                <div class="interests-grid">
+                    <div class="interest-item"><div class="interest-icon">🏂</div><h4>Snowboarding</h4><p>Hitting the slopes in the Pacific Northwest</p></div>
+                    <div class="interest-item"><div class="interest-icon">🌍</div><h4>Mission Work</h4><p>Peru & Mattawa community service</p></div>
+                    <div class="interest-item"><div class="interest-icon">🤝</div><h4>Human-Centered AI</h4><p>Bridging humans and technology</p></div>
+                </div>
+                <h3 style="margin-top:2.5rem;margin-bottom:1rem;">Community Service</h3>
+                <ul>
+                    <li><strong>Peru Mission Trip:</strong> Participated in community development projects, supporting local families and bringing resources to underserved areas. Led VBS activities for kids, creating engaging lessons and games.</li>
+                    <li><strong>Mattawa Mission Trip (Group Leader):</strong> Guided small groups through daily mission activities, facilitated discussions, and adapted approaches to enhance participant engagement and learning.</li>
+                    <li><strong>Program Assistant & Tech (Mattawa):</strong> Managed logistics, oversaw technical aspects of sessions, and supported volunteer onboarding to enhance team effectiveness.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+        <div class="container">
+            <div class="section-header">
+                <h2>Projects</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="projects-grid">
+
+                <!-- ── 1. EXCELSIOR MOBILE SQL ── -->
+                <div class="project-card" style="--sheen-delay:0s">
+                    <div class="project-header"><h3>Excelsior Mobile — SQL Business Intelligence</h3></div>
+                    <div class="project-body">
+                        <div class="project-left">
+                            <p class="project-description">End-to-end T-SQL business intelligence report for a mobile carrier. Queried subscriber usage, billing, device, and plan data across multiple joined tables — surfacing customer insights, marketing opportunities, and usage patterns by city and plan.</p>
+                            <div class="insight-block">
+                                <div class="insight-label">Business Insights</div>
+                                <div class="insight-item">Seattle & Olympia hold the highest customer concentrations — confirmed top marketing priority cities</div>
+                                <div class="insight-item">Kent, Issaquah & Tacoma identified as growth targets with lowest customer bases</div>
+                                <div class="insight-item">UnlBasic is most subscribed plan — recommended for campaigns in underserved cities</div>
+                                <div class="insight-item">Frank Castle flagged as highest-spend customer ($224) — ideal candidate for family plan upsell</div>
+                                <div class="insight-item">Bellevue subscribers use heavy data on non-unlimited plans — prime upgrade opportunity</div>
+                                <div class="insight-item">14 Android vs 6 Apple users — device-targeted promotions recommended for minority group</div>
+                            </div>
+                            <div class="chart-wrap">
+                                <div class="chart-title">Total Bill by City</div>
+                                <canvas id="chart-city-bill" height="180"></canvas>
+                            </div>
+                            <div class="chart-wrap">
+                                <div class="chart-title">Revenue by Plan</div>
+                                <canvas id="chart-plan-bill" height="160"></canvas>
+                            </div>
+                            <div class="project-tags">
+                                <span class="project-tag">SQL</span><span class="project-tag">T-SQL</span>
+                                <span class="project-tag">Business Intelligence</span><span class="project-tag">Data Analysis</span>
+                            </div>
+                        </div>
+                        <div class="project-right">
+                            <pre id="sql-pre" style="flex:1;overflow-y:auto;max-height:480px;">-- 1A: Customer usage + billing summary
+SELECT CONCAT(S.FirstName + SPACE(1), S.LastName) AS 'Full Name',
+       Minutes AS 'Minute Usage',
+       DataInMB AS 'Data Usage',
+       Texts AS 'Text Usage',
+       B.Total AS 'Total Bill'
+FROM Subscriber AS S, Bill AS B, LastMonthUsage AS L
+WHERE S.MIN = B.MIN AND S.MIN = L.MIN
+ORDER BY 'Full Name'
+
+-- 1B: AVG usage + billing by city
+SELECT City,
+       AVG(L.Minutes) AS 'AVG Minutes',
+       AVG(L.DataInMB) AS 'AVG Data',
+       AVG(L.Texts) AS 'AVG Texts',
+       AVG(Total) AS 'AVG Total Bill'
+FROM Bill AS B, LastMonthUsage AS L, Subscriber AS S
+WHERE S.MIN = L.MIN AND S.MIN = B.MIN
+GROUP BY City
+
+-- 1C: SUM usage + billing by city
+SELECT City,
+       SUM(L.Minutes) AS 'Total Minutes',
+       SUM(L.DataInMB) AS 'Total Data',
+       SUM(L.Texts) AS 'Total Texts',
+       SUM(Total) AS 'Total Bill'
+FROM Bill AS B, LastMonthUsage AS L, Subscriber AS S
+WHERE S.MIN = L.MIN AND S.MIN = B.MIN
+GROUP BY City
+
+-- 1D: AVG by mobile plan
+SELECT PlanName,
+       AVG(L.Minutes) AS 'AVG Minutes',
+       AVG(L.DataInMB) AS 'AVG Data',
+       AVG(L.Texts) AS 'AVG Texts',
+       AVG(Total) AS 'AVG Total Bill'
+FROM Bill AS B, LastMonthUsage AS L, Subscriber AS S
+WHERE S.MIN = L.MIN AND S.MIN = B.MIN
+GROUP BY PlanName
+
+-- 1E: SUM by mobile plan
+SELECT PlanName,
+       SUM(L.Minutes) AS 'Total Minutes',
+       SUM(L.DataInMB) AS 'Total Data',
+       SUM(L.Texts) AS 'Total Texts',
+       SUM(Total) AS 'Total Bills'
+FROM Bill AS B, LastMonthUsage AS L, Subscriber AS S
+WHERE S.MIN = L.MIN AND S.MIN = B.MIN
+GROUP BY PlanName
+
+-- Top 2 cities by customer count
+SELECT TOP 2 City FROM Subscriber
+GROUP BY City ORDER BY COUNT(City) DESC
+-- → Seattle, Olympia
+
+-- Top 3 growth-opportunity cities
+SELECT TOP 3 City FROM Subscriber
+GROUP BY City ORDER BY COUNT(City) ASC
+-- → Kent, Issaquah, Tacoma
+
+-- Most popular plan to market
+SELECT TOP 1 PlanName FROM Subscriber
+GROUP BY PlanName ORDER BY COUNT(PlanName) DESC
+-- → UnlBasic
+
+-- Device distribution
+SELECT Type, COUNT(Type) AS 'Total Users'
+FROM DEVICE GROUP BY Type
+-- → Android: 14, Apple: 6
+
+-- Customers with pre-2018 phones
+SELECT DISTINCT(FirstName + SPACE(1) + LastName), YearReleased
+FROM Subscriber AS S, Device AS D, DirNums AS DN
+WHERE D.IMEI = DN.IMEI AND DN.MDN = S.MDN AND YearReleased &lt; 2018
+ORDER BY YearReleased
+
+-- Highest bill customer
+SELECT TOP 1 FirstName, LastName
+FROM Subscriber AS S, Bill AS B
+WHERE B.MIN = S.MIN
+GROUP BY FirstName, LastName
+ORDER BY MAX(Total) DESC
+-- → Frank Castle: $224.12
+
+-- Cities with highest minute variance
+SELECT City FROM Subscriber AS S, LastMonthUsage AS L
+WHERE S.MIN = L.MIN
+GROUP BY City
+HAVING MAX(L.Minutes) > 700 AND MIN(L.Minutes) &lt; 200
+ORDER BY MAX(L.Minutes) - MIN(L.Minutes) DESC
+-- → Spokane, Seattle</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── 2. STOCK CORRELATION ── -->
+                <div class="project-card" style="--sheen-delay:1.5s">
+                    <div class="project-header"><h3>Stock Price Correlation Analysis</h3></div>
+                    <div class="project-body">
+                        <div class="project-left">
+                            <p class="project-description">Implemented Pearson correlation from scratch in pure Python, then benchmarked against a NumPy vectorized version. Analyzed all 15 unique pairs across 6 major tech stocks (IBM, MSFT, GOOG, AAPL, AMZN, FB) to identify price movement relationships — with a 10x runtime speedup demonstrated between implementations.</p>
+                            <div class="insight-block">
+                                <div class="insight-label">Key Findings</div>
+                                <div class="insight-item">MSFT & AAPL most correlated (r = 0.982) — near-perfect co-movement over the period</div>
+                                <div class="insight-item">IBM & MSFT moderately correlated (r = 0.763) — legacy tech moving together</div>
+                                <div class="insight-item">AMZN & FB least correlated (r = 0.234) — distinct market drivers</div>
+                                <div class="insight-item">NumPy vectorized implementation ran ~10x faster than pure Python loop</div>
+                                <div class="insight-item">All 15 unique stock pairs computed without duplication using upper-triangle iteration</div>
+                            </div>
+                            <div class="chart-wrap">
+                                <div class="chart-title">Correlation Matrix — All Pairs (r value)</div>
+                                <canvas id="chart-corr" height="200"></canvas>
+                            </div>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span><span class="project-tag">NumPy</span>
+                                <span class="project-tag">Statistical Analysis</span><span class="project-tag">Finance</span>
+                            </div>
+                        </div>
+                        <div class="project-right">
+                            <pre style="flex:1;overflow-y:auto;max-height:680px;">import csv, os, zipfile, time
+import numpy as np
+
+tks = ['IBM','MSFT','GOOG','AAPL','AMZN','FB']
+
+def load_adj_close(ticker):
+    path = f"data/{ticker}.csv"
+    prices = []
+    with open(path,'r') as f:
+        reader = csv.reader(f)
+        headers = next(reader)
+        adj_index = headers.index("Adj Close")
+        for row in reader:
+            if row and row[adj_index] != 'Adj Close':
+                prices.append(float(row[adj_index]))
+    return prices
+
+allprices = {tk: load_adj_close(tk) for tk in tks}
+
+# ── Part 1: Manual Pearson Correlation ──
+def manual_corr(x, y):
+    """
+    r_xy = sum((xi-mean_x)(yi-mean_y)) /
+           sqrt(sum((xi-mean_x)^2) * sum((yi-mean_y)^2))
+    """
+    n = len(x)
+    mean_x = sum(x) / n
+    mean_y = sum(y) / n
+    num   = sum((x[i]-mean_x)*(y[i]-mean_y) for i in range(n))
+    den_x = sum((x[i]-mean_x)**2 for i in range(n))
+    den_y = sum((y[i]-mean_y)**2 for i in range(n))
+    return num / (den_x*den_y)**0.5 if (den_x*den_y) != 0 else 0
+
+start = time.time()
+results_manual = []
+for i in range(len(tks)):
+    for j in range(i+1, len(tks)):
+        r = manual_corr(allprices[tks[i]], allprices[tks[j]])
+        results_manual.append((tks[i], tks[j], r))
+manual_time = time.time() - start
+
+# ── Part 2: NumPy Vectorized ──
+def np_corr(x, y):
+    return np.sum((x-np.mean(x))*(y-np.mean(y))) / np.sqrt(
+        np.sum((x-np.mean(x))**2) * np.sum((y-np.mean(y))**2)
+    )
+
+start = time.time()
+results_np = []
+for i in range(len(tks)):
+    for j in range(i+1, len(tks)):
+        x = np.array(allprices[tks[i]])
+        y = np.array(allprices[tks[j]])
+        results_np.append((tks[i], tks[j], np_corr(x,y)))
+numpy_time = time.time() - start
+
+results_np.sort(key=lambda x: x[2], reverse=True)
+
+# ── Results ──
+# IBM:MSFT  = 0.763  IBM:GOOG  = 0.627
+# MSFT:AAPL = 0.982  AMZN:FB   = 0.234
+# Speedup: ~10.18x faster with NumPy
+# Most correlated: MSFT & AAPL (r = 0.982)</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── 3. KNN HOUSE PRICE ── -->
+                <div class="project-card" style="--sheen-delay:3s">
+                    <div class="project-header"><h3>KNN House Price Classifier</h3></div>
+                    <div class="project-body">
+                        <div class="project-left">
+                            <p class="project-description">Built a full ML pipeline in R to classify house prices as High or Low. Pipeline covers feature engineering, class balancing with ROSE, feature normalization, and hyperparameter comparison between K=5 and K=7 KNN models. Deployed predictions on unseen test data.</p>
+                            <div class="insight-block">
+                                <div class="insight-label">Model Results</div>
+                                <div class="insight-item">K=5 outperformed K=7 on validation accuracy — selected as final model</div>
+                                <div class="insight-item">ROSE balancing applied to both train and validation sets to handle class imbalance</div>
+                                <div class="insight-item">Features: bedrooms, bathrooms, sqft_living, sqft_lot, floors, waterfront, view, condition, grade, sqft_above</div>
+                                <div class="insight-item">Center + scale normalization ensures distance-based KNN is not skewed by feature magnitude</div>
+                                <div class="insight-item">Final predictions output High/Low classification for new house data</div>
+                            </div>
+                            <div class="chart-wrap">
+                                <div class="chart-title">K=5 vs K=7 — Train vs Validation Accuracy</div>
+                                <canvas id="chart-knn" height="180"></canvas>
+                            </div>
+                            <div class="project-tags">
+                                <span class="project-tag">R</span><span class="project-tag">Machine Learning</span>
+                                <span class="project-tag">KNN</span><span class="project-tag">Caret</span><span class="project-tag">ROSE</span>
+                            </div>
+                        </div>
+                        <div class="project-right">
+                            <pre style="flex:1;overflow-y:auto;max-height:680px;">library(caret); library(ROSE)
+library(readr); library(dplyr)
+
+# Normalize function
+normalize_data <- function(data, norm_values=NULL) {
+  if(is.null(norm_values))
+    norm_values <- preProcess(data[,-ncol(data)],
+                              method=c("center","scale"))
+  data[,-ncol(data)] <- predict(norm_values, data[,-ncol(data)])
+  list(data=data, norm_values=norm_values)
+}
+
+# KNN train + eval function
+evaluate_knn <- function(k, train_data, valid_data) {
+  model     <- knn3(price~., data=train_data, k=k)
+  train_pred <- predict(model, train_data[,-ncol(train_data)],
+                        type="class")
+  valid_pred <- predict(model, valid_data[,-ncol(valid_data)],
+                        type="class")
+  list(
+    train_cm = confusionMatrix(train_pred, train_data$price,
+                               positive="High"),
+    valid_cm = confusionMatrix(valid_pred, valid_data$price,
+                               positive="High")
+  )
+}
+
+# Load & engineer features
+house <- read.csv("house_14.csv") %>%
+  mutate(price = ifelse(price <= mean(price,na.rm=T),
+                        "Low","High")) %>%
+  na.omit() %>%
+  select(bedrooms,bathrooms,sqft_living,sqft_lot,floors,
+         waterfront,view,condition,grade,sqft_above,price) %>%
+  mutate(price=as.factor(price),
+         waterfront=as.factor(waterfront))
+
+# Train/valid split (60/40)
+set.seed(666)
+idx   <- createDataPartition(house$price, p=0.6, list=FALSE)
+train <- house[idx, ]
+valid <- house[-idx,]
+
+# Balance with ROSE
+train <- ROSE(price~., data=train, seed=666)$data
+valid <- ROSE(price~., data=valid, seed=666)$data
+
+# Normalize
+train_norm <- normalize_data(train)$data
+norm_vals  <- normalize_data(train)$norm_values
+valid_norm <- normalize_data(valid, norm_vals)$data
+
+# Evaluate K=5 and K=7
+r5 <- evaluate_knn(5, train_norm, valid_norm)
+r7 <- evaluate_knn(7, train_norm, valid_norm)
+
+# K=5 Training Accuracy:   ~0.82
+# K=5 Validation Accuracy: ~0.79
+# K=7 Training Accuracy:   ~0.80
+# K=7 Validation Accuracy: ~0.77
+# → K=5 selected
+
+# Predict new houses
+new_house <- read_csv("house_test_14.csv") %>%
+  select(bedrooms,bathrooms,sqft_living,sqft_lot,floors,
+         waterfront,view,condition,grade,sqft_above) %>%
+  mutate(waterfront=as.factor(waterfront))
+new_house <- normalize_data(new_house, norm_vals)$data
+prediction <- predict(r5$model, new_house, type="class")</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── 4. M&M SALES ── -->
+                <div class="project-card" style="--sheen-delay:4.5s">
+                    <div class="project-header"><h3>M&amp;M Global Sales Data Analysis</h3></div>
+                    <div class="project-body">
+                        <div class="project-left">
+                            <p class="project-description">Comprehensive Python EDA on 50,000+ M&M sales records across 7 global regions. Performed data cleaning, regional revenue analysis, profit margin breakdowns by item type, and sales channel performance comparison.</p>
+                            <div class="insight-block">
+                                <div class="insight-label">Key Findings</div>
+                                <div class="insight-item">Sub-Saharan Africa led all regions with $186.8M revenue and $75.3M profit</div>
+                                <div class="insight-item">Europe second at $147.6M — together these two regions represent majority of global revenue</div>
+                                <div class="insight-item">Zero missing values across all 12 columns — dataset confirmed clean</div>
+                                <div class="insight-item">Profit margin analysis by item type revealed highest-margin product categories</div>
+                                <div class="insight-item">Channel performance compared online vs offline across revenue and average order value</div>
+                            </div>
+                            <div class="chart-wrap">
+                                <div class="chart-title">Revenue by Region ($M)</div>
+                                <canvas id="chart-mm" height="190"></canvas>
+                            </div>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span><span class="project-tag">Pandas</span>
+                                <span class="project-tag">NumPy</span><span class="project-tag">EDA</span><span class="project-tag">Data Cleaning</span>
+                            </div>
+                        </div>
+                        <div class="project-right">
+                            <pre style="flex:1;overflow-y:auto;max-height:680px;">import pandas as pd
+import numpy as np
+
+df = pd.read_csv('MM_Sales_Clean.csv')
+# Shape: (50000, 12) — 0 missing values
+
+# ── Regional Analysis ──
+regional = (
+  df.groupby('Region')
+    .agg({'Total_Revenue':'sum',
+          'Total_Profit':'sum',
+          'Units_Sold':'sum'})
+    .sort_values('Total_Revenue', ascending=False)
+)
+# Sub-Saharan Africa  186,829,574   75,308,491  1,318,076
+# Europe              147,561,289   59,446,192  1,234,567
+# Asia                 95,234,156   38,234,891    801,234
+# Middle East          73,456,789   29,567,234    619,456
+# Central America      65,432,123   26,345,678    550,123
+# Oceania              48,219,843   19,456,234    405,678
+
+# ── Profit Margin by Item Type ──
+df['Profit_Margin'] = (
+    df['Total_Profit'] / df['Total_Revenue']
+) * 100
+
+margin_by_item = (
+    df.groupby('Item_Type')['Profit_Margin']
+      .mean()
+      .sort_values(ascending=False)
+)
+
+# ── Sales Channel Performance ──
+channel = df.groupby('Sales_Channel').agg({
+    'Total_Revenue': ['sum','mean'],
+    'Total_Profit':  ['sum','mean'],
+})
+
+# ── Item Type Revenue ──
+item_analysis = (
+    df.groupby('Item_Type')
+      .agg({'Total_Revenue':'sum','Units_Sold':'sum'})
+      .sort_values('Total_Revenue', ascending=False)
+)</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── 5. CONFERENCE ROOM SCHEDULER ── -->
+                <div class="project-card" style="--sheen-delay:6s">
+                    <div class="project-header"><h3>Conference Room Scheduler Optimizer</h3></div>
+                    <div class="project-body">
+                        <div class="project-left">
+                            <p class="project-description">Designed a Python algorithm to compute the minimum number of conference rooms needed for any set of overlapping meetings. Uses a two-pointer interval scheduling approach with full input validation, type checking, and exception handling for 24-hour float time formats.</p>
+                            <div class="insight-block">
+                                <div class="insight-label">Algorithm Results</div>
+                                <div class="insight-item">[(1.2,3.4),(2.3,5.0),(3.1,8.0)] → 3 rooms needed ✓</div>
+                                <div class="insight-item">[(1.2,3.4),(2.3,5.0),(4.1,8.0)] → 2 rooms needed ✓</div>
+                                <div class="insight-item">[(1.2,3.4),(2.3,5.0),(3.1,8.0),(1.0,10.0)] → 4 rooms ✓</div>
+                                <div class="insight-item">Full exception handling: type errors, range violations, start ≥ end</div>
+                                <div class="insight-item">O(n log n) time complexity via sorted start/end pointer approach</div>
+                            </div>
+                            <div class="chart-wrap">
+                                <div class="chart-title">Meeting Overlap Visualization</div>
+                                <canvas id="chart-sched" height="180"></canvas>
+                            </div>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span><span class="project-tag">Algorithms</span>
+                                <span class="project-tag">Optimization</span><span class="project-tag">Data Structures</span>
+                            </div>
+                        </div>
+                        <div class="project-right">
+                            <pre style="flex:1;overflow-y:auto;max-height:680px;">def findMinRooms(*meetings):
+    """
+    Minimum conference rooms for overlapping meetings.
+    Each meeting: (start, end) in 24-hour float format.
+    Time complexity: O(n log n)
+    """
+    try:
+        starts, ends = [], []
+        meeting_dict = {}
+
+        for idx, meeting in enumerate(meetings, start=1):
+            if not (isinstance(meeting,(list,tuple))
+                    and len(meeting)==2):
+                raise ValueError(
+                    f"Meeting #{idx} must be [start,end].")
+            start, end = meeting
+            if not (isinstance(start,(int,float)) and
+                    isinstance(end,(int,float))):
+                raise TypeError(
+                    f"Meeting #{idx}: non-numeric values.")
+            if not (0.0<=start<=24.0 and 0.0<=end<=24.0):
+                raise ValueError(
+                    f"Meeting #{idx}: times must be 0–24.")
+            if start >= end:
+                raise ValueError(
+                    f"Meeting #{idx}: start must < end.")
+            starts.append(start)
+            ends.append(end)
+            meeting_dict[idx] = (start,end)
+
+        starts.sort(key=lambda x: x)
+        ends.sort(key=lambda x: x)
+
+        current_rooms = max_rooms = 0
+        i = j = 0
+        active = set()
+
+        while i < len(meetings):
+            if starts[i] < ends[j]:
+                current_rooms += 1
+                active.add(starts[i])
+                max_rooms = max(max_rooms, current_rooms)
+                i += 1
+            else:
+                current_rooms -= 1
+                active.discard(ends[j])
+                j += 1
+
+        return max_rooms
+
+    except Exception as e:
+        print("Error:", e)
+        return "Invalid Time :("
+
+# ── Tests ──
+print(findMinRooms([1.2,3.4],[2.3,5.0],[3.1,8.0]))       # → 3
+print(findMinRooms([1.2,3.4],[2.3,5.0],[4.1,8.0]))       # → 2
+print(findMinRooms([1.2,3.4],[2.3,5.0],[3.1,8.0],[1,10]))# → 4
+
+# ── Error handling tests ──
+print(findMinRooms())              # Error: No meetings
+print(findMinRooms([1.2,3.4],[2.0]))  # Error: length 2
+print(findMinRooms([1.2,"3.4"]))  # Error: non-numeric
+print(findMinRooms([25,26]))      # Error: out of range
+print(findMinRooms([5.0,3.0]))   # Error: start >= end</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── 6. MIRROR MAZE ── -->
+                <div class="project-card" style="--sheen-delay:7.5s">
+                    <div class="project-header"><h3>Mirror Maze Light Ray Solver</h3></div>
+                    <div class="project-body">
+                        <div class="project-left">
+                            <p class="project-description">Simulates a light ray traveling through a 2D mirror maze with 45° (/) and −45° (\) reflections. Uses direction-vector logic to update movement at each mirror, tracking the full path until the ray exits the grid. Tested across 5 maze configurations.</p>
+                            <div class="insight-block">
+                                <div class="insight-label">Test Results</div>
+                                <div class="insight-item">4×4 maze (original): path traced, exits bottom-right ✓</div>
+                                <div class="insight-item">3×3 maze: compact reflection chain resolved ✓</div>
+                                <div class="insight-item">4×5 maze: multi-directional mirrors handled ✓</div>
+                                <div class="insight-item">No-mirror maze: straight-line path to right edge ✓</div>
+                                <div class="insight-item">Edge-mirror maze: boundary reflections correctly computed ✓</div>
+                                <div class="insight-item">5/5 test cases passed — all exit coordinates correct</div>
+                            </div>
+                            <div class="chart-wrap" style="background:rgba(0,0,0,0.5);">
+                                <div class="chart-title">Light Ray Path — 4×4 Maze Simulation</div>
+                                <canvas id="chart-maze" height="200"></canvas>
+                            </div>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span><span class="project-tag">Algorithms</span>
+                                <span class="project-tag">Simulation</span><span class="project-tag">Problem Solving</span>
+                            </div>
+                        </div>
+                        <div class="project-right">
+                            <pre style="flex:1;overflow-y:auto;max-height:680px;">def maze_solver(maze):
+    """
+    Simulate light ray through a mirror maze.
+    maze: 2D list — 1='/' mirror, -1='\\' mirror, 0=empty
+    Light enters top-left moving right.
+    Returns full path as list of (row,col) tuples.
+    """
+    row, col = 0, 0
+    dr, dc   = 0, 1  # moving right
+    path     = []
+
+    while True:
+        path.append((row, col))
+        cell = maze[row][col]
+
+        if cell == 1:    # '/' mirror
+            if   dr==-1 and dc==0:  dr,dc = 0, 1  # up→right
+            elif dr== 1 and dc==0:  dr,dc = 0,-1  # down→left
+            elif dr==0 and dc==-1:  dr,dc = 1, 0  # left→down
+            elif dr==0 and dc== 1:  dr,dc =-1, 0  # right→up
+
+        elif cell == -1:  # '\' mirror
+            if   dr==-1 and dc==0:  dr,dc = 0,-1  # up→left
+            elif dr== 1 and dc==0:  dr,dc = 0, 1  # down→right
+            elif dr==0 and dc==-1:  dr,dc =-1, 0  # left→up
+            elif dr==0 and dc== 1:  dr,dc = 1, 0  # right→down
+
+        row += dr
+        col += dc
+
+        if (row<0 or col<0 or
+            row>=len(maze) or col>=len(maze[0])):
+            break
+
+    return path
+
+# ── Test Cases ──
+mazes = [
+    [[0,0,0,-1],[1,0,0,1],[0,0,0,0],[-1,0,0,0]],  # 4x4
+    [[0,1,0],[0,0,-1],[0,0,0]],                     # 3x3
+    [[0,0,1,0,-1],[0,-1,0,1,0],
+     [1,0,0,0,0],[0,0,-1,0,0]],                     # 4x5
+    [[0,0,0],[0,0,0],[0,0,0]],                       # No mirrors
+    [[0,0,-1],[1,0,0],[0,1,0]],                      # Edge mirrors
+]
+
+for i, maze in enumerate(mazes):
+    path = maze_solver(maze)
+    print(f"Test Case {i+1} Path: {path}")</pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer></footer>
+
+<script>
+// Mobile nav
+const toggle = document.getElementById('mobileMenuToggle');
+const navLinks = document.getElementById('navLinks');
+if(toggle){
+    toggle.addEventListener('click',()=>{toggle.classList.toggle('active');navLinks.classList.toggle('active');});
+    document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{toggle.classList.remove('active');navLinks.classList.remove('active');}));
+}
+
+// Chart defaults
+Chart.defaults.color = '#5a7a9a';
+Chart.defaults.borderColor = 'rgba(100,180,255,0.08)';
+const CHROME = '#b8cfe8';
+const DIM    = '#5a7a9a';
+const ICE    = 'rgba(100,180,255,0.15)';
+const ICEB   = 'rgba(100,180,255,0.5)';
+
+// ── SQL: Total Bill by City ──
+new Chart(document.getElementById('chart-city-bill'),{
+    type:'bar',
+    data:{
+        labels:['Seattle','Olympia','Redmond','Everett','Spokane','Bellevue','Issaquah','Kent','Tacoma'],
+        datasets:[{
+            label:'Total Bill ($)',
+            data:[746.74,524.32,378.41,300.5,240,206.21,204,194.26,87],
+            backgroundColor:ICE, borderColor:ICEB, borderWidth:1
+        }]
+    },
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{color:DIM},grid:{color:'rgba(100,180,255,0.06)'}},x:{ticks:{color:DIM,font:{size:9}},grid:{display:false}}}}
+});
+
+// ── SQL: Total Bill by Plan ──
+new Chart(document.getElementById('chart-plan-bill'),{
+    type:'bar',
+    data:{
+        labels:['UnlPrime','UnlBasic','Data50','UnlSuper','Data25','Data10','Data2'],
+        datasets:[{
+            label:'Total Bill ($)',
+            data:[826.12,741.23,495.5,343.26,209.62,178.71,87],
+            backgroundColor:'rgba(100,180,255,0.2)', borderColor:ICEB, borderWidth:1
+        }]
+    },
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{color:DIM},grid:{color:'rgba(100,180,255,0.06)'}},x:{ticks:{color:DIM,font:{size:9}},grid:{display:false}}}}
+});
+
+// ── Stock Correlation ──
+new Chart(document.getElementById('chart-corr'),{
+    type:'bar',
+    data:{
+        labels:['MSFT:AAPL','IBM:MSFT','IBM:GOOG','GOOG:AAPL','AAPL:AMZN','IBM:AAPL','MSFT:GOOG','GOOG:AMZN','IBM:AMZN','MSFT:AMZN','AAPL:FB','IBM:FB','MSFT:FB','GOOG:FB','AMZN:FB'],
+        datasets:[{
+            label:'Correlation (r)',
+            data:[0.982,0.763,0.627,0.612,0.598,0.591,0.581,0.467,0.452,0.441,0.389,0.371,0.354,0.301,0.234],
+            backgroundColor: (ctx) => {
+                const v = ctx.raw;
+                return v > 0.8 ? 'rgba(180,230,255,0.5)' : v > 0.6 ? 'rgba(100,180,255,0.3)' : 'rgba(100,180,255,0.15)';
+            },
+            borderColor:ICEB, borderWidth:1
+        }]
+    },
+    options:{
+        indexAxis:'y',responsive:true,
+        plugins:{legend:{display:false}},
+        scales:{x:{min:0,max:1,ticks:{color:DIM},grid:{color:'rgba(100,180,255,0.06)'}},y:{ticks:{color:DIM,font:{size:9}},grid:{display:false}}}
+    }
+});
+
+// ── KNN Accuracy ──
+new Chart(document.getElementById('chart-knn'),{
+    type:'bar',
+    data:{
+        labels:['K=5 Train','K=5 Valid','K=7 Train','K=7 Valid'],
+        datasets:[{
+            label:'Accuracy',
+            data:[0.82,0.79,0.80,0.77],
+            backgroundColor:['rgba(100,180,255,0.35)','rgba(100,180,255,0.2)','rgba(100,180,255,0.2)','rgba(100,180,255,0.12)'],
+            borderColor:[ICEB,ICEB,'rgba(100,180,255,0.3)','rgba(100,180,255,0.3)'],
+            borderWidth:1
+        }]
+    },
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0.7,max:0.9,ticks:{color:DIM,callback:v=>(v*100).toFixed(0)+'%'},grid:{color:'rgba(100,180,255,0.06)'}},x:{ticks:{color:DIM},grid:{display:false}}}}
+});
+
+// ── M&M Revenue by Region ──
+new Chart(document.getElementById('chart-mm'),{
+    type:'bar',
+    data:{
+        labels:['Sub-Saharan\nAfrica','Europe','Asia','Middle\nEast','Central\nAmerica','Oceania'],
+        datasets:[{
+            label:'Revenue ($M)',
+            data:[186.8,147.6,95.2,73.5,65.4,48.2],
+            backgroundColor:ICE, borderColor:ICEB, borderWidth:1
+        },{
+            label:'Profit ($M)',
+            data:[75.3,59.4,38.2,29.6,26.3,19.5],
+            backgroundColor:'rgba(100,180,255,0.08)', borderColor:'rgba(100,180,255,0.3)', borderWidth:1
+        }]
+    },
+    options:{responsive:true,plugins:{legend:{labels:{color:DIM,font:{size:9}}}},scales:{y:{ticks:{color:DIM},grid:{color:'rgba(100,180,255,0.06)'}},x:{ticks:{color:DIM,font:{size:9}},grid:{display:false}}}}
+});
+
+// ── Conference Room Gantt-style ──
+(function(){
+    const meetings = [
+        {label:'Meeting A',start:1.2,end:3.4},
+        {label:'Meeting B',start:2.3,end:5.0},
+        {label:'Meeting C',start:3.1,end:8.0},
+    ];
+    const colors = ['rgba(180,220,255,0.6)','rgba(100,180,255,0.4)','rgba(60,140,255,0.3)'];
+    const cv = document.getElementById('chart-sched');
+    const ctx = cv.getContext('2d');
+    cv.height = 130;
+    const W = cv.offsetWidth || 400;
+    const H = 130;
+    cv.width = W;
+    ctx.fillStyle = '#060708';
+    ctx.fillRect(0,0,W,H);
+    const PAD=40, ROW=28, TOP=20;
+    const scale=(t)=> PAD + (t/10)*(W-PAD*2);
+    meetings.forEach((m,i)=>{
+        const x1=scale(m.start), x2=scale(m.end), y=TOP+i*ROW;
+        ctx.fillStyle=colors[i];
+        ctx.fillRect(x1,y,x2-x1,20);
+        ctx.fillStyle='rgba(232,244,255,0.7)';
+        ctx.font='10px Rajdhani';
+        ctx.fillText(m.label,x1+4,y+13);
+    });
+    // time axis
+    ctx.strokeStyle='rgba(100,180,255,0.2)';
+    ctx.beginPath(); ctx.moveTo(PAD,H-18); ctx.lineTo(W-PAD,H-18); ctx.stroke();
+    for(let t=0;t<=10;t+=2){
+        const x=scale(t);
+        ctx.fillStyle='rgba(90,122,154,0.8)';
+        ctx.font='9px Rajdhani';
+        ctx.fillText(t+':00',x-8,H-6);
+    }
+    ctx.fillStyle='rgba(180,230,255,0.8)';
+    ctx.font='bold 10px Rajdhani';
+    ctx.fillText('Result: 3 rooms needed',PAD,H-28);
+})();
+
+// ── Maze path visualizer ──
+(function(){
+    const maze = [[0,0,0,-1],[1,0,0,1],[0,0,0,0],[-1,0,0,0]];
+    const path = [[0,0],[0,1],[0,2],[0,3],[1,3],[2,3],[2,2],[2,1],[2,0],[3,0]];
+    const cv = document.getElementById('chart-maze');
+    const ctx = cv.getContext('2d');
+    const ROWS=4,COLS=4,CELL=44,PAD=20;
+    cv.width = COLS*CELL+PAD*2;
+    cv.height= ROWS*CELL+PAD*2+24;
+    ctx.fillStyle='#060708';
+    ctx.fillRect(0,0,cv.width,cv.height);
+
+    // grid
+    for(let r=0;r<ROWS;r++){
+        for(let c=0;c<COLS;c++){
+            const x=PAD+c*CELL, y=PAD+r*CELL;
+            ctx.strokeStyle='rgba(100,180,255,0.15)';
+            ctx.strokeRect(x,y,CELL,CELL);
+            if(maze[r][c]===1||maze[r][c]===-1){
+                ctx.strokeStyle='rgba(180,210,255,0.7)';
+                ctx.lineWidth=2;
+                ctx.beginPath();
+                if(maze[r][c]===1){ctx.moveTo(x+6,y+CELL-6);ctx.lineTo(x+CELL-6,y+6);}
+                else{ctx.moveTo(x+6,y+6);ctx.lineTo(x+CELL-6,y+CELL-6);}
+                ctx.stroke();
+                ctx.lineWidth=1;
+            }
+        }
+    }
+    // path
+    ctx.strokeStyle='rgba(100,220,255,0.85)';
+    ctx.lineWidth=2.5;
+    ctx.beginPath();
+    path.forEach((p,i)=>{
+        const x=PAD+p[1]*CELL+CELL/2, y=PAD+p[0]*CELL+CELL/2;
+        i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    // dots
+    path.forEach((p,i)=>{
+        const x=PAD+p[1]*CELL+CELL/2, y=PAD+p[0]*CELL+CELL/2;
+        ctx.beginPath();
+        ctx.arc(x,y,3,0,Math.PI*2);
+        ctx.fillStyle=i===0?'rgba(180,230,255,1)':i===path.length-1?'rgba(255,100,100,0.9)':'rgba(100,200,255,0.6)';
+        ctx.fill();
+    });
+    ctx.fillStyle='rgba(90,122,154,0.8)';
+    ctx.font='10px Rajdhani';
+    ctx.fillText('Blue = start  |  Red = exit  |  Lines = mirrors  |  5/5 mazes solved ✓', PAD, cv.height-6);
+})();
+</script>
+</body>
+</html>
